@@ -52,11 +52,21 @@ export function renderPlayer(id, playerName, xpLevel, playerAge, level) {
     buttonContainer.role = "group";
 
     const editButton = document.createElement("button");
+    editButton.type = "button"
+    editButton.setAttribute("data-bs-target", "#collapseAddEditDeletePlayer");
+    editButton.setAttribute("aria-expanded", "false");
+    editButton.setAttribute("data-bs-toggle", "collapse");
+    editButton.setAttribute("aria-controls", "collapseAddEditDeletePlayer");
     editButton.className = "btn btn-dark";
     editButton.innerHTML = '<i class="bi bi-pencil"></i>'; // Imágen de lápiz
     // editButton.addEventListener("click", () => editPlayer(el.id));
 
     const deleteButton = document.createElement("button");
+    deleteButton.type = "button"
+    deleteButton.setAttribute("data-bs-target", "#collapseAddEditDeletePlayer");
+    deleteButton.setAttribute("aria-expanded", "false");
+    deleteButton.setAttribute("data-bs-toggle", "collapse");
+    deleteButton.setAttribute("aria-controls", "collapseAddEditDeletePlayer");
     deleteButton.className = "btn btn-danger";
     deleteButton.innerHTML = '<i class="bi bi-trash"></i>'; // Imágen de basurero
     // deleteButton.addEventListener("click", () => deletePlayer(el.id));
