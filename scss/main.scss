@@ -1,0 +1,36 @@
+@import "./assets/fonts.scss";
+
+#card-players {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.section-players {
+    text-align: center;
+
+    &__button {
+        margin: .5rem 0;
+    }
+
+    &__div {
+        margin: .5rem 3rem;
+    }
+}
+
+.navbar {
+    .container-fluid {
+        justify-content: center;
+    }
+}
+
+h1 {
+    padding: 0.25rem;
+    text-align: center;
+}
+
+#editPlayerForm,
+#deletePlayerForm {
+    display: none;
+}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayudante para juegos</title>
+    <script src="./js/main.js" async></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar bg-dark">
+        <div class="container-fluid">
+            <h1 class="text-white border border-white">AYUDANTE PARA JUEGOS DE MESA</h1>
+        </div>
+    </nav>
+
+    <section class="section-players">
+        <!-- Agregar jugador (botón) -->
+        <button class="btn btn-dark section-players__button" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapseAddPlayer" aria-expanded="false" aria-controls="collapseAddPlayer">
+            Agregar nuevo jugador
+        </button>
+        <!-- Editar jugador (botón) -->
+        <button class="btn btn-dark section-players__button" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapseEditPlayer" aria-expanded="false" aria-controls="collapseEditPlayer">
+            Editar jugador
+        </button>
+        <!-- Eliminar jugador (botón) -->
+        <button class="btn btn-dark section-players__button" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapseDeletePlayer" aria-expanded="false" aria-controls="collapseDeletePlayer">
+            Eliminar jugador
+        </button>
+        <!-- Agregar jugador (formulario) -->
+        <div class="collapse section-players__div" id="collapseAddPlayer">
+            <div class="card card-body">
+                <form id="addPlayerForm">
+                    <div class="mb-3">
+                        <label for="playerNameInput" class="form-label">Nombre de jugador</label>
+                        <input type="playerName" class="form-control" id="playerNameInput"
+                            aria-describedby="playerNameHelp">
+                    </div>
+                    <div class="mb-3">
+                        <div>
+                            <label for="playerXpLevelSelect" class="form-label">Nivel del experiencia</label>
+                            <!-- <button type="button" class="btn-close" aria-label="Close"></button> -->
+                        </div>
+                        <select class="form-select" aria-label="playerXpLevelSelect" id="playerXpLevelSelect"
+                            aria-placeholder="Prueba">
+                            <option disabled selected></option>
+                            <option value="1">Nivel 1 (Novato)</option>
+                            <option value="2">Nivel 2 (Regular)</option>
+                            <option value="3">Nivel 3 (Veterano)</option>
+                            <option value="4">Nivel 4 (Profesional)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <div>
+                            <label for="playerAgeInput" class="form-label">Edad del jugador</label>
+                            <!-- <button type="button" class="btn-close" aria-label="Close"></button> -->
+                        </div>
+                        <input type="playerAge" class="form-control" id="playerAgeInput"
+                            aria-describedby="playerAgeHelp">
+                    </div>
+
+                    <button type="submit" class="btn btn-dark" id="addPlayerSubmit">Agregar</button>
+                </form>
+            </div>
+        </div>
+        <!-- Editar jugador (formulario) -->
+        <div class="collapse section-players__div" id="collapseEditPlayer">
+            <div class="card card-body">
+                <form id="editPlayerForm">
+                    <!-- Lista desplegable de jugadores (editar) -->
+                    <div class="mb-3">
+                        <div>
+                            <label for="editPlayerSelect" class="form-label">Seleccione el jugador que desea
+                                editar</label>
+                        </div>
+                        <select class="form-select" aria-label="editPlayerSelect" id="editPlayerSelect">
+                            <option disabled selected></option>
+                        </select>
+                    </div>
+                    <!-- Campos a modificar del jugador -->
+                    <div class="mb-3">
+                        <label for="editPlayerNameInput" class="form-label">Nombre de jugador</label>
+                        <input type="editPlayerName" class="form-control" id="editPlayerNameInput"
+                            aria-describedby="editPlayerNameHelp">
+                    </div>
+                    <div class="mb-3">
+                        <div>
+                            <label for="editPlayerXpLevelSelect" class="form-label">Nivel del experiencia</label>
+                        </div>
+                        <select class="form-select" aria-label="editPlayerXpLevelSelect" id="editPlayerXpLevelSelect">
+                            <option id="editPlayerXpLevelPlaceholder" disabled selected></option>
+                            <option value="1">Nivel 1 (Novato)</option>
+                            <option value="2">Nivel 2 (Regular)</option>
+                            <option value="3">Nivel 3 (Veterano)</option>
+                            <option value="4">Nivel 4 (Profesional)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <div>
+                            <label for="editPlayerAgeInput" class="form-label">Edad del jugador</label>
+                        </div>
+                        <input type="editPlayerAge" class="form-control" id="editPlayerAgeInput"
+                            aria-describedby="editPlayerAgeHelp">
+                    </div>
+
+                    <button type="submit" class="btn btn-dark" id="editPlayerSubmit">Editar</button>
+                </form>
+            </div>
+        </div>
+        <!-- Eliminar jugador (formulario) -->
+        <div class="collapse section-players__div" id="collapseDeletePlayer">
+            <div class="card card-body">
+                <form id="deletePlayerForm">
+                    <!-- Lista desplegable de jugadores (eliminar) -->
+                    <div class="mb-3">
+                        <div>
+                            <label for="deletePlayerSelect" class="form-label">Seleccione el jugador que desea
+                                eliminar</label>
+                        </div>
+                        <select class="form-select" aria-label="deletePlayerSelect" id="deletePlayerSelect">
+                            <option disabled selected></option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-dark" id="deletePlayerSubmit">Eliminar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Card para mostrar jugadores agregados y sus propiedades (experiencia y edad) -->
+        <div class="card mx-5 mb-5 mt-2">
+            <div class="card-header text-center">
+                <h2>JUGADORES</h1>
+            </div>
+            <div class="card-body" id="card-players">
+                <!-- Sección donde se agregan los elementos html por cada jugador nuevo -->
+
+            </div>
+            <div class="card-footer" id="qtyOfPlayers">
+                Hay 0 jugadores en la partida
+            </div>
+        </div>
+    </section>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
