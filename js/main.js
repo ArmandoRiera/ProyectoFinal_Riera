@@ -45,7 +45,7 @@ updatePlayerCount(listOfPlayers.length)
 listOfPlayers.forEach(el => {
 
     // Renderizado de nuevo jugador
-    renderPlayer(el, listOfPlayers, editButtonHandler, deleteButtonHandler)
+    renderPlayer(el, listOfPlayers, editButtonHandler)
 
 })
 
@@ -84,7 +84,7 @@ function addPlayer() {
     localStorage.setItem("listOfPlayers", JSON.stringify(listOfPlayers))
 
     // Renderizado de nuevo jugador
-    renderPlayer(newPlayer, listOfPlayers, editButtonHandler, deleteButtonHandler)
+    renderPlayer(newPlayer, listOfPlayers, editButtonHandler)
 
     // Limpiar formulario
     clearForm()
