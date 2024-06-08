@@ -36,17 +36,14 @@
     </nav>
 
     <section class="section-players">
+
         <!-- Agregar jugador (botón) -->
         <button class="btn btn-dark section-players__button" type="button" data-bs-toggle="collapse"
             data-bs-target="#collapseAddEditPlayer" aria-expanded="false" aria-controls="collapseAddEditPlayer"
             id="addPlayerButton">
             Agregar nuevo jugador
         </button>
-        <!-- Eliminar jugador (botón) -->
-        <button class="btn btn-dark section-players__button" type="button" data-bs-toggle="collapse"
-            data-bs-target="#collapseDeletePlayer" aria-expanded="false" aria-controls="collapseDeletePlayer">
-            Eliminar jugador
-        </button>
+
         <!-- Agregar jugador (formulario) -->
         <div class="collapse section-players__div" id="collapseAddEditPlayer">
             <div class="card card-body">
@@ -78,30 +75,12 @@
                         <input type="playerAge" class="form-control" id="playerAgeInput"
                             aria-describedby="playerAgeHelp">
                     </div>
-
                     <button type="submit" class="btn btn-dark" id="addPlayerSubmit">Agregar</button>
                     <button type="submit" class="btn btn-dark" id="editPlayerSubmit">Guardar</button>
                 </form>
             </div>
         </div>
-        <!-- Eliminar jugador (formulario) -->
-        <div class="collapse section-players__div" id="collapseDeletePlayer">
-            <div class="card card-body">
-                <form id="deletePlayerForm">
-                    <!-- Lista desplegable de jugadores (eliminar) -->
-                    <div class="mb-3">
-                        <div>
-                            <label for="deletePlayerSelect" class="form-label">Seleccione el jugador que desea
-                                eliminar</label>
-                        </div>
-                        <select class="form-select" aria-label="deletePlayerSelect" id="deletePlayerSelect">
-                            <option disabled selected></option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-dark" id="deletePlayerSubmit">Eliminar</button>
-                </form>
-            </div>
-        </div>
+
 
         <!-- Card para mostrar jugadores agregados y sus propiedades (experiencia y edad) -->
         <div class="card mx-5 mb-5 mt-2">
@@ -110,12 +89,12 @@
             </div>
             <div class="card-body" id="card-players">
                 <!-- Sección donde se agregan los elementos html por cada jugador nuevo -->
-
             </div>
             <div class="card-footer" id="qtyOfPlayers">
                 Hay 0 jugadores en la partida
             </div>
         </div>
+
     </section>
 </body>
 

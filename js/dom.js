@@ -1,6 +1,37 @@
 // Función para definir aleatoriamente el color del jugador
 import { btnColorDef } from './utilities.js';
 
+// Función para renderizar eliminación de jugador
+export function renderDeletedPlayer(playerDeleted, listOfPlayers) {
+    const playerDeletedIndex = listOfPlayers.findIndex((el) => el.id === playerDeleted.id);
+
+    document.getElementById("player-general-info" + playerDeleted.id).remove()
+
+    listOfPlayers.splice(playerDeletedIndex, 1)
+
+    updatePlayerCount(listOfPlayers.length)
+
+    clearForm()
+}
+
+// Función para renderizar cambios en jugador
+export function renderEditedPlayer(playerEdited) {
+
+    // Desestructuración de jugador editado (objeto)
+    let { id, playerName, xpLevel, playerAge, level } = playerEdited
+
+    // Renderizado de nombre modificado, placeholder y limpiar campo de ingreso
+    document.getElementById("playerInfoName" + id).innerText = playerName
+
+    // Renderización de edad modificada, placeholder y limpiar campo de ingreso
+    document.getElementById("playerInfoAge" + id).innerText = `${playerAge} años`
+
+    // Renderización de nivel y ajuste en lista de niveles
+    document.getElementById("playerInfoLevel" + id).innerText = `Nivel ${xpLevel} (${level}) `
+
+    clearForm()
+}
+
 // Función para definir aleatoriamente el color del jugador
 export function renderPlayer(player, listOfPlayers, editButtonHandler, deleteButtonHandler) {
 
@@ -86,29 +117,20 @@ export function renderPlayer(player, listOfPlayers, editButtonHandler, deleteBut
     buttonContainer.appendChild(editButton);
     buttonContainer.appendChild(deleteButton);
 
-    // Ciclo para agregar jugadores a listas de editar o eliminar jugadores
-    const deletePlayerList = document.getElementById("deletePlayerSelect");
-
-    // Inclusión de jugador en lista de eliminación
-    const deleteAddListItem = document.createElement("option");
-    deleteAddListItem.value = `${id}`;
-    deleteAddListItem.id = `${id}`;
-    deleteAddListItem.innerText = playerName;
-
-    deletePlayerList.appendChild(deleteAddListItem);
 }
 
 // Función para Limpiar formulario luego de agregar un nuevo jugador
 export function clearForm() {
     document.getElementById("playerNameInput").value = "";
-    document.getElementById("playerXpLevelSelect").value = "";
+
+    // Mostrar la edad del jugador a modificar como placeholder
     document.getElementById("playerAgeInput").value = "";
+
+    // Seleccionar el nivel del jugador a modificar
+    document.getElementById("playerXpLevelSelect").value = "";
 }
 
 // Función para actualizar conteo de jugadores
 export function updatePlayerCount(qtyOfPlayers) {
     document.getElementById("qtyOfPlayers").innerText = `Hay ${qtyOfPlayers} jugadores en la partida`;
-
-    // Condicionales para mostrar o no los formularios de edición y eliminación
-    document.getElementById("deletePlayerForm").style.display = qtyOfPlayers ? "block" : "none"
 }

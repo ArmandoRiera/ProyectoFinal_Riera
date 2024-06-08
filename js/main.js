@@ -5,7 +5,7 @@ import listOfPlayersExample from './samplePlayers.js';
 import { Player } from './player.js';
 
 // Función para renderizar jugadores
-import { clearForm, renderPlayer, updatePlayerCount } from './dom.js';
+import { clearForm, renderPlayer, updatePlayerCount, renderEditedPlayer, renderDeletedPlayer } from './dom.js';
 
 let listOfPlayers = JSON.parse(localStorage.getItem("listOfPlayers")) || listOfPlayersExample;
 
@@ -41,8 +41,7 @@ const deleteButtonHandler = (id, listOfPlayers) => {
     // Ubicar jugador a editar en el array de jugadores
     playerDeleted = listOfPlayers.find((el) => el.id === parseInt(id));
 
-    console.log(playerDeleted)
-
+    // Sweet Alert para eliminar jugador
     Swal.fire({
         title: `¿Seguro que quiere eliminar al jugador ${playerDeleted.playerName}?`,
         text: "¡Esta acción no puede revertirse!",
@@ -58,39 +57,28 @@ const deleteButtonHandler = (id, listOfPlayers) => {
                 text: `${playerDeleted.playerName} ya no está en el juego`,
                 icon: "success"
             });
-            renderDeletedPlayer(playerDeleted)
+
+            // Llamado de función para renderizar eliminación de jugador
+            renderDeletedPlayer(playerDeleted, listOfPlayers)
+
+            // Actualización de localStorage
+            localStorage.removeItem("listOfPlayers")
+            if (listOfPlayers.length) localStorage.setItem("listOfPlayers", JSON.stringify(listOfPlayers))
         }
     });
-
 }
 
 // Ciclo para renderizar jugadores de ejemplo o guardados en localStorage
 updatePlayerCount(listOfPlayers.length)
-
 listOfPlayers.forEach(el => {
-
     // Renderizado de nuevo jugador e inclusión de eventos para botones de edición y eliminación
     renderPlayer(el, listOfPlayers, editButtonHandler, deleteButtonHandler)
-
 })
 
 // Evento para mostrar botón de agregar nuevo jugador
 const addPlayerButtom = document.getElementById("addPlayerButton")
-
-const resetForm = () => {
-    document.getElementById("playerNameInput").value = ""
-
-    // Mostrar la edad del jugador a modificar como placeholder
-    document.getElementById("playerAgeInput").value = ""
-
-    // Seleccionar el nivel del jugador a modificar
-    document.getElementById("playerXpLevelSelect").value = ""
-}
-
 addPlayerButtom.addEventListener("click", () => {
-
-    resetForm()
-
+    clearForm()
     // Suprimir botón de editar y mostrar botón de agregar
     document.getElementById("addPlayerSubmit").style.display = "inline-block"
     document.getElementById("editPlayerSubmit").style.display = "none"
@@ -138,127 +126,74 @@ addEditPlayerForm.addEventListener("submit", (e) => {
     e.preventDefault();
 });
 
-// Evento para cargar un nuevo jugador
+// Eventos para cargar un nuevo jugador
 const addPlayerSubmit = document.getElementById("addPlayerSubmit");
-addPlayerSubmit.addEventListener("click", () => addPlayer());
+addPlayerSubmit.addEventListener("click", () => {
+    const playerNameInput = document.getElementById("playerNameInput").value
+    const playerAgeInput = document.getElementById("playerAgeInput").value
+    const playerXpLevelSelect = document.getElementById("playerXpLevelSelect").value
+    if (!playerNameInput || !playerAgeInput || !playerXpLevelSelect) {
+        Swal.fire({
+            title: "Por favor ingrese todos los campos",
+            icon: "error"
+        });
+    } else {
+        addPlayer()
+    }
+});
 
 // Evento para editar un jugador
 const editPlayerSubmit = document.getElementById("editPlayerSubmit");
 
 editPlayerSubmit.addEventListener("click", () => {
 
-    // Modificación de objeto (jugador)
-    playerEdited.playerName = document.getElementById("playerNameInput").value
-    playerEdited.playerAge = parseInt(document.getElementById("playerAgeInput").value)
-    playerEdited.xpLevel = parseInt(document.getElementById("playerXpLevelSelect").value)
-    playerEdited.level = (() => {
-        switch (playerEdited.xpLevel) {
-            case 1:
-                return "Novato";
-            case 2:
-                return "Regular";
-            case 3:
-                return "Veterano";
-            case 4:
-                return "Profesional";
-            default:
-                return "Desconocido"
-        };
-    })();
+    const playerNameInput = document.getElementById("playerNameInput").value
+    const playerAgeInput = document.getElementById("playerAgeInput").value
+    if (!playerNameInput || !playerAgeInput) {
+        Swal.fire({
+            title: "Por favor ingrese todos los campos",
+            icon: "error"
+        });
+    } else {
+        // Modificación de objeto (jugador)
+        playerEdited.playerName = document.getElementById("playerNameInput").value
+        playerEdited.playerAge = parseInt(document.getElementById("playerAgeInput").value)
+        playerEdited.xpLevel = parseInt(document.getElementById("playerXpLevelSelect").value)
+        playerEdited.level = (() => {
+            switch (playerEdited.xpLevel) {
+                case 1:
+                    return "Novato";
+                case 2:
+                    return "Regular";
+                case 3:
+                    return "Veterano";
+                case 4:
+                    return "Profesional";
+                default:
+                    return "Desconocido"
+            };
+        })();
 
-    // Función para renderizar edición de jugador
-    renderEditedPlayer(playerEdited)
+        // Función para renderizar edición de jugador
+        renderEditedPlayer(playerEdited)
 
-    localStorage.removeItem("listOfPlayers")
-    localStorage.setItem("listOfPlayers", JSON.stringify(listOfPlayers))
-
-});
-
-// Función para renderizar cambios en jugador
-function renderEditedPlayer(playerEdited) {
-
-    // Desestructuración de jugador editado (objeto)
-    let { id, playerName, xpLevel, playerAge, level } = playerEdited
-
-    // Renderizado de nombre modificado, placeholder y limpiar campo de ingreso
-    document.getElementById("playerInfoName" + id).innerText = playerName
-
-    // Renderización de edad modificada, placeholder y limpiar campo de ingreso
-    document.getElementById("playerInfoAge" + id).innerText = `${playerAge} años`
-
-    // Renderización de nivel y ajuste en lista de niveles
-    document.getElementById("playerInfoLevel" + id).innerText = `Nivel ${xpLevel} (${level}) `
-
-    resetForm()
-}
-
-// Función para renderizar eliminación de jugador
-function renderDeletedPlayer(playerDeleted) {
-    const playerDeletedIndex = listOfPlayers.findIndex((el) => el.id === playerDeleted.id);
-
-    console.log(playerDeleted)
-
-    console.log(playerDeletedIndex)
-
-    document.getElementById("player-general-info" + playerDeleted.id).remove()
-
-    listOfPlayers.splice(playerDeletedIndex, 1)
-
-    updatePlayerCount(listOfPlayers.length)
-
-    clearForm()
-
-    localStorage.removeItem("listOfPlayers")
-    localStorage.setItem("listOfPlayers", JSON.stringify(listOfPlayers))
-}
-
-// Eliminar un jugador
-const deletePlayerList = document.getElementById("deletePlayerSelect");
-
-function deleteSelectedPlayer() {
-    const playerDeleted = listOfPlayers.find((el) => el.id === parseInt(deletePlayerList.value));
-
-    const playerDeletedIndex = listOfPlayers.findIndex((el) => el.id === parseInt(deletePlayerList.value));
-
-    document.getElementById("player-general-info" + playerDeleted.id).remove()
-
-    editPlayerList[playerDeletedIndex + 1].remove()
-
-    deletePlayerList[playerDeletedIndex + 1].remove()
-
-    listOfPlayers.splice(playerDeletedIndex, 1)
-
-    document.getElementById("qtyOfPlayers").innerText = `Hay ${listOfPlayers.length} jugadores en la partida`
-
-    if (listOfPlayers.length === 0) {
-        document.getElementById("editPlayerForm").style.display = "none"
-        document.getElementById("deletePlayerForm").style.display = "none"
+        localStorage.removeItem("listOfPlayers")
+        localStorage.setItem("listOfPlayers", JSON.stringify(listOfPlayers))
     }
-
-    localStorage.removeItem("listOfPlayers")
-    localStorage.setItem("listOfPlayers", JSON.stringify(listOfPlayers))
-
-}
-
-// Control para no actualizar página cuando se elimine un jugador
-const deletePlayerForm = document.getElementById("deletePlayerForm");
-const deletePlayerSubmit = document.getElementById("deletePlayerSubmit");
-
-deletePlayerForm.addEventListener("submit", (e) => {
-    e.preventDefault();
 });
 
-deletePlayerSubmit.addEventListener("click", () => deleteSelectedPlayer());
+// Evento para validación numérica de la edad
+document.getElementById("playerAgeInput").addEventListener("input", () => {
+    (document.getElementById("playerAgeInput").value.length > 0) && ageValidation(document.getElementById("playerAgeInput").value)
+})
 
 // Función para validar si el número ingresado es número entero mayor a cero
-// function ageValidation(newNumber) {
-//     const enteredNumber = parseFloat(newNumber.replace(",", "."));
-//     if (!isNaN(enteredNumber) && Number.isInteger(enteredNumber) && (enteredNumber > 0)) {
-//         return enteredNumber;
-//     } else {
-//         alert("Por favor ingrese un número entero mayor a cero");
-//     };
-// }
+function ageValidation(newNumber) {
+    let enteredNumber = parseInt(newNumber.slice(-1))
+    if (isNaN(enteredNumber)) {
+        document.getElementById("playerAgeInput").value = newNumber.slice(0, -1)
+    };
+}
 
 // Algoritmo para asegurar nivelación de equipos según experiencia (en desarrollo)
 // const list = [4, 2, 3, 3, 1, 4, 3, 2]
