@@ -42,11 +42,6 @@
             id="addPlayerButton">
             Agregar nuevo jugador
         </button>
-        <!-- Editar jugador (botón) -->
-        <button class="btn btn-dark section-players__button" type="button" data-bs-toggle="collapse"
-            data-bs-target="#collapseEditPlayer" aria-expanded="false" aria-controls="collapseEditPlayer">
-            Editar jugador
-        </button>
         <!-- Eliminar jugador (botón) -->
         <button class="btn btn-dark section-players__button" type="button" data-bs-toggle="collapse"
             data-bs-target="#collapseDeletePlayer" aria-expanded="false" aria-controls="collapseDeletePlayer">
@@ -86,50 +81,6 @@
 
                     <button type="submit" class="btn btn-dark" id="addPlayerSubmit">Agregar</button>
                     <button type="submit" class="btn btn-dark" id="editPlayerSubmit">Guardar</button>
-                </form>
-            </div>
-        </div>
-        <!-- Editar jugador (formulario) -->
-        <div class="collapse section-players__div" id="collapseEditPlayer">
-            <div class="card card-body">
-                <form id="editPlayerForm">
-                    <!-- Lista desplegable de jugadores (editar) -->
-                    <div class="mb-3">
-                        <div>
-                            <label for="editPlayerSelect" class="form-label">Seleccione el jugador que desea
-                                editar</label>
-                        </div>
-                        <select class="form-select" aria-label="editPlayerSelect" id="editPlayerSelect">
-                            <option disabled selected></option>
-                        </select>
-                    </div>
-                    <!-- Campos a modificar del jugador -->
-                    <div class="mb-3">
-                        <label for="editPlayerNameInput" class="form-label">Nombre de jugador</label>
-                        <input type="editPlayerName" class="form-control" id="editPlayerNameInput"
-                            aria-describedby="editPlayerNameHelp">
-                    </div>
-                    <div class="mb-3">
-                        <div>
-                            <label for="editPlayerXpLevelSelect" class="form-label">Nivel del experiencia</label>
-                        </div>
-                        <select class="form-select" aria-label="editPlayerXpLevelSelect" id="editPlayerXpLevelSelect">
-                            <option id="editPlayerXpLevelPlaceholder" disabled selected></option>
-                            <option value="1">Nivel 1 (Novato)</option>
-                            <option value="2">Nivel 2 (Regular)</option>
-                            <option value="3">Nivel 3 (Veterano)</option>
-                            <option value="4">Nivel 4 (Profesional)</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <div>
-                            <label for="editPlayerAgeInput" class="form-label">Edad del jugador</label>
-                        </div>
-                        <input type="editPlayerAge" class="form-control" id="editPlayerAgeInput"
-                            aria-describedby="editPlayerAgeHelp">
-                    </div>
-
-                    <button type="submit" class="btn btn-dark" id="editPlayerSubmit">Editar</button>
                 </form>
             </div>
         </div>

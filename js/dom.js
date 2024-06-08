@@ -73,26 +73,8 @@ export function renderPlayer(player, listOfPlayers, editButtonHandler, deleteBut
     deleteButton.className = "btn btn-danger";
     deleteButton.innerHTML = '<i class="bi bi-trash"></i>'; // Imágen de basurero
     deleteButton.addEventListener("click", () => {
-        console.log("Prueba")
-        // Swal.fire({
-        //     title: "Are you sure?",
-        //     text: "You won't be able to revert this!",
-        //     icon: "warning",
-        //     showCancelButton: true,
-        //     confirmButtonColor: "#3085d6",
-        //     cancelButtonColor: "#d33",
-        //     confirmButtonText: "Yes, delete it!"
-        // }).then((result) => {
-        //     if (result.isConfirmed) {
-        //         Swal.fire({
-        //             title: "Deleted!",
-        //             text: "Your file has been deleted.",
-        //             icon: "success"
-        //         });
-        //     }
+        deleteButtonHandler(id, listOfPlayers)
     });
-    // deleteButtonHandler(id, listOfPlayers)
-
 
     cardOfPlayers.appendChild(playerInfo);
     playerInfo.appendChild(playerInfoName);
@@ -105,14 +87,7 @@ export function renderPlayer(player, listOfPlayers, editButtonHandler, deleteBut
     buttonContainer.appendChild(deleteButton);
 
     // Ciclo para agregar jugadores a listas de editar o eliminar jugadores
-    const editPlayerList = document.getElementById("editPlayerSelect");
     const deletePlayerList = document.getElementById("deletePlayerSelect");
-
-    // Inclusión de jugador en lista de edición
-    const editAddListItem = document.createElement("option");
-    editAddListItem.value = `${id}`;
-    editAddListItem.id = `${id}`;
-    editAddListItem.innerText = playerName;
 
     // Inclusión de jugador en lista de eliminación
     const deleteAddListItem = document.createElement("option");
@@ -120,7 +95,6 @@ export function renderPlayer(player, listOfPlayers, editButtonHandler, deleteBut
     deleteAddListItem.id = `${id}`;
     deleteAddListItem.innerText = playerName;
 
-    editPlayerList.appendChild(editAddListItem);
     deletePlayerList.appendChild(deleteAddListItem);
 }
 
@@ -136,6 +110,5 @@ export function updatePlayerCount(qtyOfPlayers) {
     document.getElementById("qtyOfPlayers").innerText = `Hay ${qtyOfPlayers} jugadores en la partida`;
 
     // Condicionales para mostrar o no los formularios de edición y eliminación
-    document.getElementById("editPlayerForm").style.display = qtyOfPlayers ? "block" : "none"
     document.getElementById("deletePlayerForm").style.display = qtyOfPlayers ? "block" : "none"
 }

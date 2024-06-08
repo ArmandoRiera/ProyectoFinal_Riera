@@ -9,6 +9,8 @@ import { clearForm, renderPlayer, updatePlayerCount } from './dom.js';
 
 let listOfPlayers = JSON.parse(localStorage.getItem("listOfPlayers")) || listOfPlayersExample;
 
+let playerEdited
+
 const editButtonHandler = (id, listOfPlayers) => {
 
     // Suprimir botón de agregar y mostrar botón de editar
@@ -30,22 +32,45 @@ const editButtonHandler = (id, listOfPlayers) => {
     // Seleccionar el nivel del jugador a modificar
     document.getElementById("playerXpLevelSelect").value = xpLevel
 
-    // playerNameEdited = false;
-    // playerAgeEdited = false;
-    // playerXpLevelEdited = false;
 }
 
-// const deleteButtonHandler = (id, listOfPlayers) => {
+let playerDeleted
 
-// }
+const deleteButtonHandler = (id, listOfPlayers) => {
+
+    // Ubicar jugador a editar en el array de jugadores
+    playerDeleted = listOfPlayers.find((el) => el.id === parseInt(id));
+
+    console.log(playerDeleted)
+
+    Swal.fire({
+        title: `¿Seguro que quiere eliminar al jugador ${playerDeleted.playerName}?`,
+        text: "¡Esta acción no puede revertirse!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#0d6efd",
+        cancelButtonColor: "#dc3545",
+        confirmButtonText: "Sí, eliminar jugador"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: `Jugador eliminado`,
+                text: `${playerDeleted.playerName} ya no está en el juego`,
+                icon: "success"
+            });
+            renderDeletedPlayer(playerDeleted)
+        }
+    });
+
+}
 
 // Ciclo para renderizar jugadores de ejemplo o guardados en localStorage
 updatePlayerCount(listOfPlayers.length)
 
 listOfPlayers.forEach(el => {
 
-    // Renderizado de nuevo jugador
-    renderPlayer(el, listOfPlayers, editButtonHandler)
+    // Renderizado de nuevo jugador e inclusión de eventos para botones de edición y eliminación
+    renderPlayer(el, listOfPlayers, editButtonHandler, deleteButtonHandler)
 
 })
 
@@ -84,7 +109,7 @@ function addPlayer() {
     localStorage.setItem("listOfPlayers", JSON.stringify(listOfPlayers))
 
     // Renderizado de nuevo jugador
-    renderPlayer(newPlayer, listOfPlayers, editButtonHandler)
+    renderPlayer(newPlayer, listOfPlayers, editButtonHandler, deleteButtonHandler)
 
     // Limpiar formulario
     clearForm()
@@ -105,12 +130,6 @@ function addPlayer() {
         onClick: function () { }
     }).showToast();
 
-    // Sweet Alert cuando se agrega un nuevo jugador
-    // Swal.fire({
-    //     title: "Se agrego al jugador " + playerName,
-    //     text: "Nivel " + xpLevel + " (" + level + ")",
-    //     icon: "success"
-    // });
 }
 
 // Control para no actualizar página cuando se agregue o edite un jugador
@@ -122,8 +141,6 @@ addEditPlayerForm.addEventListener("submit", (e) => {
 // Evento para cargar un nuevo jugador
 const addPlayerSubmit = document.getElementById("addPlayerSubmit");
 addPlayerSubmit.addEventListener("click", () => addPlayer());
-
-let playerEdited
 
 // Evento para editar un jugador
 const editPlayerSubmit = document.getElementById("editPlayerSubmit");
@@ -152,18 +169,16 @@ editPlayerSubmit.addEventListener("click", () => {
     // Función para renderizar edición de jugador
     renderEditedPlayer(playerEdited)
 
-    // playerNameEdited = false;
-    // playerAgeEdited = false;
-    // playerXpLevelEdited = false;
+    localStorage.removeItem("listOfPlayers")
+    localStorage.setItem("listOfPlayers", JSON.stringify(listOfPlayers))
+
 });
 
+// Función para renderizar cambios en jugador
 function renderEditedPlayer(playerEdited) {
 
     // Desestructuración de jugador editado (objeto)
     let { id, playerName, xpLevel, playerAge, level } = playerEdited
-
-    console.log(id, playerName, xpLevel, playerAge, level)
-    console.log(listOfPlayers)
 
     // Renderizado de nombre modificado, placeholder y limpiar campo de ingreso
     document.getElementById("playerInfoName" + id).innerText = playerName
@@ -177,152 +192,25 @@ function renderEditedPlayer(playerEdited) {
     resetForm()
 }
 
-// Edición de jugador
-const editPlayerList = document.getElementById("editPlayerSelect");
+// Función para renderizar eliminación de jugador
+function renderDeletedPlayer(playerDeleted) {
+    const playerDeletedIndex = listOfPlayers.findIndex((el) => el.id === playerDeleted.id);
 
-let playerNameEdited
-let playerXpLevelEdited
-let playerAgeEdited
+    console.log(playerDeleted)
 
-editPlayerList.addEventListener("input", () => {
+    console.log(playerDeletedIndex)
 
-    const playerEdited = listOfPlayers.find((el) => el.id === parseInt(editPlayerList.value));
+    document.getElementById("player-general-info" + playerDeleted.id).remove()
 
-    const editPlayerNameInput = document.getElementById("editPlayerNameInput");
+    listOfPlayers.splice(playerDeletedIndex, 1)
 
-    editPlayerNameInput.placeholder = playerEdited.playerName;
+    updatePlayerCount(listOfPlayers.length)
 
-    playerNameEdited = false;
-
-    const editPlayerAgeInput = document.getElementById("editPlayerAgeInput");
-
-    editPlayerAgeInput.placeholder = playerEdited.playerAge;
-
-    playerAgeEdited = false
-
-    const editPlayerXpLevelPlaceholder = document.getElementById("editPlayerXpLevelPlaceholder");
-
-    editPlayerXpLevelPlaceholder.innerText = `Nivel ${playerEdited.xpLevel} (${playerEdited.level})`;
-
-    playerXpLevelEdited = false
-
-});
-
-// Borrar "placeholder" del selector cuando se activa la lista + modificación variable bandera de edición de nivel
-const editPlayerXpLevelSelect = document.getElementById("editPlayerXpLevelSelect");
-
-editPlayerXpLevelSelect.addEventListener("click", () => {
-    const editPlayerXpLevelPlaceholder = document.getElementById("editPlayerXpLevelPlaceholder");
-    editPlayerXpLevelPlaceholder.innerText = "";
-
-    playerXpLevelEdited = true
-})
-
-// Ctrl. de cambio en campos de edición (variables bandera)
-
-// Modificación bandera de edición de nombre
-const editPlayerNameInput = document.getElementById("editPlayerNameInput");
-
-editPlayerNameInput.addEventListener("input", () => {
-    playerNameEdited = true
-})
-
-// Modificación bandera de edición de edad
-const editPlayerAgeInput = document.getElementById("editPlayerAgeInput");
-
-editPlayerAgeInput.addEventListener("input", () => {
-    playerAgeEdited = true
-})
-
-
-// Función para editar propiedades de jugador
-function editSelectedPlayer(playerNameEdited, playerAgeEdited, playerXpLevelEdited) {
-
-    const playerEdited = listOfPlayers.find((el) => el.id === parseInt(editPlayerList.value));
-
-    const playerEditedIndex = listOfPlayers.findIndex((el) => el.id === parseInt(editPlayerList.value));
-
-    if (playerNameEdited) {
-
-        const playerInfoName = document.getElementById("playerInfoName" + editPlayerList.value);
-
-        playerInfoName.innerText = editPlayerNameInput.value;
-
-        editPlayerList[playerEditedIndex + 1].innerText = editPlayerNameInput.value;
-
-        deletePlayerList[playerEditedIndex + 1].innerText = editPlayerNameInput.value;
-
-        playerEdited.playerName = editPlayerNameInput.value;
-
-        editPlayerNameInput.placeholder = playerEdited.playerName;
-
-        editPlayerNameInput.value = "";
-
-    };
-
-    if (playerAgeEdited) {
-
-        const playerInfoAge = document.getElementById("playerInfoAge" + editPlayerList.value);
-
-        playerInfoAge.innerText = editPlayerAgeInput.value;
-
-        playerEdited.playerAge = parseInt(editPlayerAgeInput.value);
-
-        editPlayerAgeInput.placeholder = playerEdited.playerAge;
-
-        editPlayerAgeInput.value = "";
-
-    };
-
-    if (playerXpLevelEdited) {
-
-        const playerInfoLevel = document.getElementById("playerInfoLevel" + editPlayerList.value)
-
-        playerEdited.xpLevel = parseInt(editPlayerXpLevelSelect.value)
-
-        playerEdited.level = (() => {
-            switch (playerEdited.xpLevel) {
-                case 1:
-                    return "Novato";
-                case 2:
-                    return "Regular";
-                case 3:
-                    return "Veterano";
-                case 4:
-                    return "Profesional";
-                default:
-                    return "Desconocido"
-            };
-        })();
-
-        playerInfoLevel.innerText = `Nivel ${playerEdited.xpLevel} (${playerEdited.level})`
-
-        const editPlayerXpLevelPlaceholder = document.getElementById("editPlayerXpLevelPlaceholder");
-
-        editPlayerXpLevelPlaceholder.innerText = `Nivel ${playerEdited.xpLevel} (${playerEdited.level})`;
-
-    }
+    clearForm()
 
     localStorage.removeItem("listOfPlayers")
     localStorage.setItem("listOfPlayers", JSON.stringify(listOfPlayers))
-
-};
-
-// Control para no actualizar página cuando se edite un nuevo jugador
-// const editPlayerForm = document.getElementById("editPlayerForm");
-
-// Evento para modificar un jugador
-// const editPlayerSubmit = document.getElementById("editPlayerSubmit");
-// editPlayerForm.addEventListener("submit", (e) => {
-//     e.preventDefault();
-// });
-
-editPlayerSubmit.addEventListener("click", () => {
-    editSelectedPlayer(playerNameEdited, playerAgeEdited, playerXpLevelEdited);
-    playerNameEdited = false;
-    playerAgeEdited = false;
-    playerXpLevelEdited = false;
-});
+}
 
 // Eliminar un jugador
 const deletePlayerList = document.getElementById("deletePlayerSelect");
@@ -362,31 +250,9 @@ deletePlayerForm.addEventListener("submit", (e) => {
 
 deletePlayerSubmit.addEventListener("click", () => deleteSelectedPlayer());
 
-// Función para elegir una opción del listado (valida si se ingresa texto o decimal)
-// function selectOption(textOption, numOptions) {
-//     do {
-//         const newOption = prompt(textOption);
-
-//         if (newOption === null) {
-//             return null
-//         }
-
-//         const option = newOption.replace(",", ".");
-//         const numberOption = parseFloat(option);
-
-//         if (!isNaN(numberOption) && Number.isInteger(numberOption) && numberOption >= 1 && numberOption <= numOptions) {
-//             return numberOption;
-//         } else {
-//             alert("Por favor, ingrese una opción válida (del 1 al " + numOptions + ")");
-//         };
-
-//     } while (true);
-// };
-
 // Función para validar si el número ingresado es número entero mayor a cero
 // function ageValidation(newNumber) {
 //     const enteredNumber = parseFloat(newNumber.replace(",", "."));
-
 //     if (!isNaN(enteredNumber) && Number.isInteger(enteredNumber) && (enteredNumber > 0)) {
 //         return enteredNumber;
 //     } else {
@@ -394,18 +260,11 @@ deletePlayerSubmit.addEventListener("click", () => deleteSelectedPlayer());
 //     };
 // }
 
-// Variables para indicar si se usa o no la experiencia y/o edad de los jugadores (NO SE ESTÁN APLICANDO AÚN)
-// const xpLvlConfirm = true
-
-// const playerAgeConfirm = true
-
 // Algoritmo para asegurar nivelación de equipos según experiencia (en desarrollo)
-
 // const list = [4, 2, 3, 3, 1, 4, 3, 2]
 // let sum = 0;
 // let n = list.length;
 // sum = list.reduce((acc, curr) => acc += curr, 0)
-
 // let found = false;
 // let lsum = 0;
 // for (let i = 0; i < n - 1; i++) {
