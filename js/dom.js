@@ -2,7 +2,9 @@
 import { btnColorDef } from './utilities.js';
 
 // Función para definir aleatoriamente el color del jugador
-export function renderPlayer(id, playerName, xpLevel, playerAge, level) {
+export function renderPlayer(player, listOfPlayers, editButtonHandler, deleteButtonHandler) {
+
+    const { id, playerName, xpLevel, playerAge, level } = player;
 
     // Rederizado de nuevo jugador
     // Card general de jugadores
@@ -52,21 +54,44 @@ export function renderPlayer(id, playerName, xpLevel, playerAge, level) {
     buttonContainer.role = "group";
 
     const editButton = document.createElement("button");
+    const collapseAddEditPlayer = document.getElementById("collapseAddEditPlayer")
     editButton.type = "button"
     editButton.setAttribute("data-bs-target", "#collapseAddEditPlayer");
     editButton.setAttribute("aria-expanded", "false");
-    editButton.setAttribute("data-bs-toggle", "collapse");
     editButton.setAttribute("aria-controls", "collapseAddEditPlayer");
     editButton.id = id
     editButton.className = "btn btn-dark editPlayerButton";
     editButton.innerHTML = '<i class="bi bi-pencil"></i>'; // Imágen de lápiz
-    // editButton.addEventListener("click", () => editPlayer(el.id));
+    editButton.addEventListener("click", () => {
+        editButtonHandler(id, listOfPlayers)
+        const expanded = collapseAddEditPlayer.classList.contains("show")
+        if (!expanded) new bootstrap.Collapse(collapseAddEditPlayer)
+    })
 
     const deleteButton = document.createElement("button");
     deleteButton.type = "button"
     deleteButton.className = "btn btn-danger";
     deleteButton.innerHTML = '<i class="bi bi-trash"></i>'; // Imágen de basurero
-    // deleteButton.addEventListener("click", () => deletePlayer(el.id));
+    deleteButton.addEventListener("click", () => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success"
+                });
+            }
+        });
+        // deleteButtonHandler(id, listOfPlayers)
+    })
 
     cardOfPlayers.appendChild(playerInfo);
     playerInfo.appendChild(playerInfoName);

@@ -9,22 +9,63 @@ import { clearForm, renderPlayer, updatePlayerCount } from './dom.js';
 
 let listOfPlayers = JSON.parse(localStorage.getItem("listOfPlayers")) || listOfPlayersExample;
 
+const editButtonHandler = (id, listOfPlayers) => {
+
+    // Suprimir botón de agregar y mostrar botón de editar
+    document.getElementById("addPlayerSubmit").style.display = "none"
+    document.getElementById("editPlayerSubmit").style.display = "inline-block"
+
+    // Ubicar jugador a editar en el array de jugadores
+    playerEdited = listOfPlayers.find((el) => el.id === parseInt(id));
+
+    // Desestructuración del jugador a modificar
+    let { playerName, xpLevel, playerAge } = playerEdited
+
+    // Mostrar el nombre del jugador a modificar como placeholder
+    document.getElementById("playerNameInput").value = playerName
+
+    // Mostrar la edad del jugador a modificar como placeholder
+    document.getElementById("playerAgeInput").value = playerAge
+
+    // Seleccionar el nivel del jugador a modificar
+    document.getElementById("playerXpLevelSelect").value = xpLevel
+
+    // playerNameEdited = false;
+    // playerAgeEdited = false;
+    // playerXpLevelEdited = false;
+}
+
+// const deleteButtonHandler = (id, listOfPlayers) => {
+
+// }
+
 // Ciclo para renderizar jugadores de ejemplo o guardados en localStorage
 updatePlayerCount(listOfPlayers.length)
 
 listOfPlayers.forEach(el => {
 
-    let { id, playerName, xpLevel, playerAge, level } = el
-
     // Renderizado de nuevo jugador
-    renderPlayer(id, playerName, xpLevel, playerAge, level)
+    renderPlayer(el, listOfPlayers, editButtonHandler, deleteButtonHandler)
 
 })
 
 // Evento para mostrar botón de agregar nuevo jugador
 const addPlayerButtom = document.getElementById("addPlayerButton")
 
+const resetForm = () => {
+    document.getElementById("playerNameInput").value = ""
+
+    // Mostrar la edad del jugador a modificar como placeholder
+    document.getElementById("playerAgeInput").value = ""
+
+    // Seleccionar el nivel del jugador a modificar
+    document.getElementById("playerXpLevelSelect").value = ""
+}
+
 addPlayerButtom.addEventListener("click", () => {
+
+    resetForm()
+
     // Suprimir botón de editar y mostrar botón de agregar
     document.getElementById("addPlayerSubmit").style.display = "inline-block"
     document.getElementById("editPlayerSubmit").style.display = "none"
@@ -42,10 +83,8 @@ function addPlayer() {
     // Guardar nuevo jugador en el localStorage
     localStorage.setItem("listOfPlayers", JSON.stringify(listOfPlayers))
 
-    let { id, playerName, xpLevel, playerAge, level } = newPlayer
-
     // Renderizado de nuevo jugador
-    renderPlayer(id, playerName, xpLevel, playerAge, level)
+    renderPlayer(newPlayer, listOfPlayers, editButtonHandler, deleteButtonHandler)
 
     // Limpiar formulario
     clearForm()
@@ -54,7 +93,7 @@ function addPlayer() {
     updatePlayerCount(listOfPlayers.length)
 
     Toastify({
-        text: "This is a toast",
+        text: `${newPlayer.playerName} se ha incluido al juego`,
         duration: 3000,
         close: true,
         gravity: "bottom",
@@ -74,49 +113,69 @@ function addPlayer() {
     // });
 }
 
-// Control para no actualizar página cuando se agregue un nuevo jugador
-const addPlayerForm = document.getElementById("addPlayerForm");
-const addPlayerSubmit = document.getElementById("addPlayerSubmit");
-
-addPlayerForm.addEventListener("submit", (e) => {
+// Control para no actualizar página cuando se agregue o edite un jugador
+const addEditPlayerForm = document.getElementById("addEditPlayerForm");
+addEditPlayerForm.addEventListener("submit", (e) => {
     e.preventDefault();
 });
 
+// Evento para cargar un nuevo jugador
+const addPlayerSubmit = document.getElementById("addPlayerSubmit");
 addPlayerSubmit.addEventListener("click", () => addPlayer());
 
-// Edición de jugador con botones
-const editButton = document.querySelectorAll(".editPlayerButton")
+let playerEdited
 
-editButton.forEach(button => {
-    button.addEventListener("click", () => {
+// Evento para editar un jugador
+const editPlayerSubmit = document.getElementById("editPlayerSubmit");
 
-        // Suprimir botón de agregar y mostrar botón de editar
-        document.getElementById("addPlayerSubmit").style.display = "none"
-        document.getElementById("editPlayerSubmit").style.display = "inline-block"
+editPlayerSubmit.addEventListener("click", () => {
 
-        console.log(button.id)
+    // Modificación de objeto (jugador)
+    playerEdited.playerName = document.getElementById("playerNameInput").value
+    playerEdited.playerAge = parseInt(document.getElementById("playerAgeInput").value)
+    playerEdited.xpLevel = parseInt(document.getElementById("playerXpLevelSelect").value)
+    playerEdited.level = (() => {
+        switch (playerEdited.xpLevel) {
+            case 1:
+                return "Novato";
+            case 2:
+                return "Regular";
+            case 3:
+                return "Veterano";
+            case 4:
+                return "Profesional";
+            default:
+                return "Desconocido"
+        };
+    })();
 
-        // Ubicar jugador a editar en el array de jugadores
-        const playerEdited = listOfPlayers.find((el) => el.id === parseInt(button.id));
+    // Función para renderizar edición de jugador
+    renderEditedPlayer(playerEdited)
 
-        console.log(playerEdited)
+    // playerNameEdited = false;
+    // playerAgeEdited = false;
+    // playerXpLevelEdited = false;
+});
 
-        // Desestructuración del jugador a modificar
-        let { id, playerName, xpLevel, playerAge, level } = playerEdited
+function renderEditedPlayer(playerEdited) {
 
-        console.log(id, playerName, xpLevel, playerAge, level)
+    // Desestructuración de jugador editado (objeto)
+    let { id, playerName, xpLevel, playerAge, level } = playerEdited
 
-        // Mostrar el nombre del jugador a modificar como placeholder
-        document.getElementById("playerNameInput").placeholder = playerName
+    console.log(id, playerName, xpLevel, playerAge, level)
+    console.log(listOfPlayers)
 
-        // Mostrar la edad del jugador a modificar como placeholder
-        document.getElementById("playerAgeInput").placeholder = playerAge
+    // Renderizado de nombre modificado, placeholder y limpiar campo de ingreso
+    document.getElementById("playerInfoName" + id).innerText = playerName
 
-        // Seleccionar el nivel del jugador a modificar
-        document.getElementById("playerXpLevelSelect").value = xpLevel
+    // Renderización de edad modificada, placeholder y limpiar campo de ingreso
+    document.getElementById("playerInfoAge" + id).innerText = `${playerAge} años`
 
-    })
-})
+    // Renderización de nivel y ajuste en lista de niveles
+    document.getElementById("playerInfoLevel" + id).innerText = `Nivel ${xpLevel} (${level}) `
+
+    resetForm()
+}
 
 // Edición de jugador
 const editPlayerList = document.getElementById("editPlayerSelect");
@@ -250,12 +309,13 @@ function editSelectedPlayer(playerNameEdited, playerAgeEdited, playerXpLevelEdit
 };
 
 // Control para no actualizar página cuando se edite un nuevo jugador
-const editPlayerForm = document.getElementById("editPlayerForm");
-const editPlayerSubmit = document.getElementById("editPlayerSubmit");
+// const editPlayerForm = document.getElementById("editPlayerForm");
 
-editPlayerForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-});
+// Evento para modificar un jugador
+// const editPlayerSubmit = document.getElementById("editPlayerSubmit");
+// editPlayerForm.addEventListener("submit", (e) => {
+//     e.preventDefault();
+// });
 
 editPlayerSubmit.addEventListener("click", () => {
     editSelectedPlayer(playerNameEdited, playerAgeEdited, playerXpLevelEdited);
