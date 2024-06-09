@@ -95,8 +95,6 @@ const addPlayer = async () => {
     // Crear nuevo jugador (objeto)
     const newPlayer = new Player(document.getElementById("playerNameInput").value, parseInt(document.getElementById("playerXpLevelSelect").value), parseInt(document.getElementById("playerAgeInput").value), avatar.url);
 
-    console.log(newPlayer)
-
     // Inclusión al array de objetos (lista de jugadores)
     listOfPlayers.push(newPlayer);
 
@@ -201,29 +199,3 @@ function ageValidation(newNumber) {
         document.getElementById("playerAgeInput").value = newNumber.slice(0, -1)
     };
 }
-
-// Algoritmo para asegurar nivelación de equipos según experiencia (en desarrollo)
-// const list = [4, 2, 3, 3, 1, 4, 3, 2]
-// let sum = 0;
-// let n = list.length;
-// sum = list.reduce((acc, curr) => acc += curr, 0)
-// let found = false;
-// let lsum = 0;
-// for (let i = 0; i < n - 1; i++) {
-//     lsum += list[i];
-//     let rsum = sum - lsum;
-//     // If averages of arr[0...i]
-//     // and arr[i+1..n-1] are same.
-//     // To avoid floating point problems
-//     // we compare "lsum(n-i+1)"
-//     // and "rsum(i+1)" instead of
-//     // "lsum/(i+1)" and "rsum/(n-i+1)"
-//     const avgC = Math.abs((lsum / (i + 1)) - (rsum / (n - i))) <= 2
-//     if (avgC) {
-//         console.log("From (0 " + i + ") to (" + (i + 1) + " " + (n - 1) + ")\n");
-//         found = true;
-//     }
-// }
-// // If no subarrays found
-// if (found == false) console.log('Not found')
-// alert(`${found} - ${lsum} - ${sum}`)
