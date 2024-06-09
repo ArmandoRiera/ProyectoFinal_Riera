@@ -1,9 +1,10 @@
 // Clase constructora de jugador
 export class Player {
-    constructor(playerName, xpLevel, playerAge) {
+    constructor(playerName, xpLevel, playerAge, avatar) {
         this.playerName = playerName;
         this.xpLevel = xpLevel;
         this.playerAge = playerAge;
+        this.avatar = avatar;
         this.level = this.levelDefinition()
         this.id = this.idDefinition()
     };

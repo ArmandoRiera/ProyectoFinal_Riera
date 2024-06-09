@@ -28,3 +28,16 @@ export function btnColorDef() {
 //             return "btn btn-light";
 //     };
 // };
+
+// Función para definir color de fondo de imágenes
+export function imgColorDef() {
+    const colors = [
+        "bg-primary",
+        "bg-secondary",
+        "bg-success",
+        "bg-warning",
+        "bg-info",
+    ]
+
+    return colors[Math.floor(Math.random() * colors.length)]
+}

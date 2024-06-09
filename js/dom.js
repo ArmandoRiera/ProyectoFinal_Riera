@@ -1,5 +1,5 @@
 // Función para definir aleatoriamente el color del jugador
-import { btnColorDef } from './utilities.js';
+import { btnColorDef, imgColorDef } from './utilities.js';
 
 // Función para renderizar eliminación de jugador
 export function renderDeletedPlayer(playerDeleted, listOfPlayers) {
@@ -35,7 +35,7 @@ export function renderEditedPlayer(playerEdited) {
 // Función para definir aleatoriamente el color del jugador
 export function renderPlayer(player, listOfPlayers, editButtonHandler, deleteButtonHandler) {
 
-    const { id, playerName, xpLevel, playerAge, level } = player;
+    const { id, playerName, xpLevel, playerAge, level, avatar } = player;
 
     // Rederizado de nuevo jugador
     // Card general de jugadores
@@ -45,6 +45,7 @@ export function renderPlayer(player, listOfPlayers, editButtonHandler, deleteBut
     const playerInfo = document.createElement("div");
     playerInfo.className = "card"
     playerInfo.id = "player-general-info" + id
+
 
     // Botón con nombre de jugador y color aleatorio para desplegar lista de propiedades
     const playerInfoName = document.createElement("button");
@@ -56,6 +57,7 @@ export function renderPlayer(player, listOfPlayers, editButtonHandler, deleteBut
     playerInfoName.setAttribute("aria-controls", "collapsePlayerInfo" + id);
     playerInfoName.id = "playerInfoName" + id;
     playerInfoName.innerText = playerName;
+    playerInfoName.style.fontWeight = "bold";
 
     // Contenedor de lista colapsible
     const playerInfoContainer = document.createElement("div");
@@ -65,6 +67,17 @@ export function renderPlayer(player, listOfPlayers, editButtonHandler, deleteBut
     // Lista de propiedades
     const playerInfoList = document.createElement("ul");
     playerInfoList.className = "list-group";
+
+    // Avatar del jugador (animal)
+    // Item de lista para incluir img
+    const playerInfoAvatar = document.createElement("li")
+    playerInfoAvatar.className = "list-group-item"
+    playerInfoAvatar.id = "playerInfoAvatar" + id
+    // Avatar (img)
+    const playerAvatar = document.createElement("img");
+    playerAvatar.className = "img-fluid img-thumbnail " + imgColorDef();
+    playerAvatar.id = "playerAvatar" + id;
+    playerAvatar.src = avatar
 
     // Nivel de jugador
     const playerInfoLevel = document.createElement("li");
@@ -114,6 +127,8 @@ export function renderPlayer(player, listOfPlayers, editButtonHandler, deleteBut
     playerInfoContainer.appendChild(playerInfoList);
     playerInfoList.appendChild(playerInfoLevel);
     playerInfoList.appendChild(playerInfoAge);
+    playerInfoList.appendChild(playerInfoAvatar)
+    playerInfoAvatar.appendChild(playerAvatar)
     buttonContainer.appendChild(editButton);
     buttonContainer.appendChild(deleteButton);
 
